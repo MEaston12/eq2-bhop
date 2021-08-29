@@ -5,25 +5,28 @@ SetKeyDelay -1, -1
 SleepDuration := 5
 TimePeriod := 3
 
-targetKey := "XButton1"
+activateKey := "XButton1"
+floatKey := "Pause"
 
-HotIfWinActive("ahk_exe EverQuest2.exe")
-XButton1::{
-	Send("{Pause Down}")
+JumpMash(thisHotkey) {
+	Send("{" floatKey " Down}")
 	;this sets the resolution for the sleep function
 	DllCall("Winmm\timeBeginPeriod", "UInt", TimePeriod)
 	Loop {
-		If(GetKeyState("XButton1", "P") == 0) {
+		If(GetKeyState(activateKey, "P") == 0) {
 			break
 		}
 		DllCall("Sleep", "UInt", SleepDuration)
 		Send("{Space}")
 	}
 	DllCall("Sleep", "UInt", SleepDuration)
-	Send("{Pause Up}")
+	Send("{" floatKey " Up}")
 	Loop 100 {
 		DllCall("Sleep", "UInt", SleepDuration)
 		Send("{Space}")
 	}
 	DllCall("Winmm\timeEndPeriod", "UInt", TimePeriod)
 }
+
+HotIfWinActive("ahk_exe EverQuest2.exe")
+Hotkey(activateKey, JumpMash)
